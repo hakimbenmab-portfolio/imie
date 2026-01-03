@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakim Ben Mabrouk | Étudiant BTS SIO SISR</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: white;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+        }
+
+        /* Mode sombre */
+        body.dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --text-dark: #f3f4f6;
+            --text-light: #d1d5db;
+            --bg-light: #1f2937;
+            --white: #111827;
+            background-color: #0f172a;
+            color: #f3f4f6;
+        }
+
+        body.dark-mode .header {
+            background: rgba(17, 24, 39, 0.95);
+            border-bottom: 1px solid #374151;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .stat-card,
+        body.dark-mode .experience-item,
+        body.dark-mode .competence-item,
+        body.dark-mode .project-card,
+        body.dark-mode .certification-card,
+        body.dark-mode .veille-card {
+            background: #1e293b;
+            color: #f3f4f6;
+        }
+
+        body.dark-mode .footer {
+            background: #0f172a;
+            border-top: 1px solid #374151;
+        }
+
+        body.dark-mode .form-control {
+            background: #1e293b;
+            border-color: #374151;
+            color: #f3f4f6;
+        }
+
+        body.dark-mode .tag {
+            background: #374151;
+            color: #f3f4f6;
+        }
+
+        body.dark-mode .progress-container {
+            background: #374151;
+        }
+
+        body.dark-mode .alert {
+            background: #1e3a5f;
+            border-left-color: #3b82f6;
+        }
+
+        /* Animations de défilement */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .scale-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Délais pour les animations en cascade */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        .delay-6 { transition-delay: 0.6s; }
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .header-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .greeting {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .name {
+            display: block;
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        .hero-role {
+            font-size: 1.5rem;
+            color: #fbbf24;
+            margin-bottom: 1.5rem;
+            min-height: 40px;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .profile-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-image i {
+            font-size: 8rem;
+            color: white;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Section commune */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .badge {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .alert {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin-top: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 4px #dbeafe;
+        }
+
+        .timeline-date {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Experience */
+        .experience-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .experience-item {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+        }
+
+        .experience-date {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .experience-duration {
+            background: #dbeafe;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .experience-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-content h4 {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .experience-details {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .experience-details li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .experience-details i {
+            color: var(--primary-color);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: #f3f4f6;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+        }
+
+        /* Compétences */
+        .competences-container {
+            display: grid;
+            gap: 3rem;
+        }
+
+        .competence-category h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .competence-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .competence-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .competence-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .competence-header i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .progress-container {
+            background: #f3f4f6;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: width 1s ease;
+        }
+
+        .progress-value {
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        /* Projets et Certifications */
+        .projects-grid,
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card,
+        .certification-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .project-card:hover,
+        .certification-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-icon,
+        .cert-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Veille Technologique */
+        .veille-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .veille-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .veille-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .veille-date {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .veille-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .veille-category {
+            display: inline-block;
+            background: #dbeafe;
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-nav a:hover {
+            color: white;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 1rem;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content,
+            .contact-container,
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-item {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-list {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .name {
+                font-size: 2rem;
+            }
+
+            .profile-image {
+                width: 200px;
+                height: 200px;
+            }
+
+            .profile-image i {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-wrapper">
+                <a href="#hero" class="logo">Hakim Ben Mabrouk</a>
+                <nav class="nav" id="nav">
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="#hero" class="nav-link active">Accueil</a></li>
+                        <li class="nav-item"><a href="#formation" class="nav-link">Formation</a></li>
+                        <li class="nav-item"><a href="#ecole" class="nav-link">École</a></li>
+                        <li class="nav-item"><a href="#experience" class="nav-link">Expérience</a></li>
+                        <li class="nav-item"><a href="#projets" class="nav-link">Projets</a></li>
+                        <li class="nav-item"><a href="#certifications" class="nav-link">Certifications</a></li>
+                        <li class="nav-item"><a href="#competences" class="nav-link">Compétences</a></li>
+                        <li class="nav-item"><a href="#veille" class="nav-link">Veille Techno</a></li>
+                        <li class="nav-item"><a href="#synthese" class="nav-link">Fiche Synthèse</a></li>
+                        <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggleBtn" aria-label="Changer le mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <span class="overline">Portfolio</span>
+                    <h1 class="hero-title">
+                        <span class="greeting">Bonjour, je suis</span>
+                        <span class="name">Hakim Ben Mabrouk</span>
+                    </h1>
+                    <div class="hero-role">Technicien Informatique en Alternance</div>
+                    <p class="hero-description">
+                        Actuellement en 2ème année de BTS SIO option SISR à l'IMIE Paris, je suis en alternance en tant que technicien informatique au sein du Ministère de la Justice.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#formation" class="btn btn-primary">Découvrir mon profil</a>
+                        <a href="#contact" class="btn btn-secondary">Me contacter</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="profile-container">
+                        <div class="profile-image">
+                            <!-- Mettez votre photo "photo.jpg" dans le même dossier -->
+                            <img src="photo.jpg" alt="Hakim Ben Mabrouk" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <i class="fas fa-user" style="display: none;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Défiler</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Formation Section -->
+    <section id="formation" class="section formation">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Ma Formation</h2>
+                <p class="section-subtitle">Mon parcours académique et mes qualifications</p>
+            </div>
+            
+            <div class="formation-content">
+                <div class="formation-current fade-in">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>BTS SIO SISR</h3>
+                            <span class="badge">En cours - 2ème année</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>IMIE Paris - École Supérieure d'Informatique</h4>
+                            <p>
+                                Formation spécialisée en Solutions d'Infrastructure, Systèmes et Réseaux avec acquisition de compétences en administration système, sécurité informatique et gestion d'infrastructure IT.
+                            </p>
+                            <div class="alert">
+                                <i class="fas fa-briefcase"></i>
+                                <p>En alternance au Ministère de la Justice - 2 semaines en formation / 2 semaines en entreprise</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline fade-in">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">2024 - 2026</div>
+                            <h3>BTS SIO SISR</h3>
+                            <p>IMIE Paris - École Supérieure d'Informatique</p>
+                            <p><i class="fas fa-laptop-code"></i> Formation en alternance</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">2021</div>
+                            <h3>Baccalauréat Professionnel BIT</h3>
+                            <p>Aristide Briand Strasbourg - Lycée Professionnel</p>
+                            <p><i class="fas fa-flask"></i> Bio-industrie de transformation</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">2020</div>
+                            <h3>Brevet d'études professionnel BIT</h3>
+                            <p>Aristide Briand Strasbourg - Lycée Professionnel</p>
+                            <p><i class="fas fa-certificate"></i> Bio-industrie de transformation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section École -->
+    <section id="ecole" class="section ecole">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Mon École</h2>
+                <p class="section-subtitle">L'IMIE Paris - École Supérieure d'Informatique</p>
+            </div>
+            
+            <div class="ecole-intro fade-in">
+                <div class="card">
+                    <div class="card-body">
+                        <p>
+                            L'IMIE Paris est une école supérieure d'informatique reconnue pour la qualité de ses enseignements 
+                            dans le domaine de l'informatique et du numérique. L'établissement propose des formations 
+                            spécialisées adaptées aux besoins du marché et des entreprises, avec un focus particulier 
+                            sur l'insertion professionnelle et l'alternance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card scale-in delay-1">
+                    <div class="stat-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-number">82<span>%</span></div>
+                    <div class="stat-label">De taux de réussite<br>aux examens</div>
+                </div>
+                
+                <div class="stat-card scale-in delay-2">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-number">88<span>%</span></div>
+                    <div class="stat-label">Réussite partielle<br>en 2025</div>
+                </div>
+                
+                <div class="stat-card scale-in delay-3">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number">1000<span>+</span></div>
+                    <div class="stat-label">Alternants<br>par an</div>
+                </div>
+                
+                <div class="stat-card scale-in delay-4">
+                    <div class="stat-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="stat-number">800<span>+</span></div>
+                    <div class="stat-label">Entreprises<br>partenaires</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section experience">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Mon Expérience Professionnelle</h2>
+                <p class="section-subtitle">Mes différentes expériences professionnelles</p>
+            </div>
+            
+            <div class="experience-list">
+                <!-- Expérience 1 - Alternance -->
+                <div class="experience-item fade-in-left">
+                    <div class="experience-date">
+                        <span>Septembre 2024 - Juin 2026</span>
+                        <div class="experience-duration">2 ans</div>
+                    </div>
+                    <div class="experience-content">
+                        <h3>Technicien Informatique</h3>
+                        <h4>Ministère de la Justice - En alternance</h4>
+                        <p>Missions d'administration système et support technique dans le cadre d'un contrat d'apprentissage.</p>
+                        <ul class="experience-details">
+                            <li><i class="fas fa-sitemap"></i> Gestion de l'Active Directory</li>
+                            <li><i class="fas fa-ticket-alt"></i> Traitement de tickets de niveau 1 et 2</li>
+                            <li><i class="fas fa-server"></i> Administration de serveurs</li>
+                            <li><i class="fas fa-users-cog"></i> Support technique aux utilisateurs</li>
+                        </ul>
+                        <div class="tags">
+                            <span class="tag">Active Directory</span>
+                            <span class="tag">Support N1/N2</span>
+                            <span class="tag">Administration Serveurs</span>
+                            <span class="tag">Infrastructure</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expérience 2 -->
+                <div class="experience-item fade-in-right">
+                    <div class="experience-date">
+                        <span>Mai 2023 - Mars 2024</span>
+                        <div class="experience-duration">10 mois</div>
+                    </div>
+                    <div class="experience-content">
+                        <h3>Sous-traitant chauffeur livreur</h3>
+                        <h4>FA Logistics Strasbourg - Pour DHL</h4>
+                        <p>Missions de livraison et gestion de la relation client dans le cadre d'un contrat CDI.</p>
+                        <ul class="experience-details">
+                            <li><i class="fas fa-box"></i> Réception et chargement des produits</li>
+                            <li><i class="fas fa-truck"></i> Livraison de colis en respectant les délais</li>
+                            <li><i class="fas fa-users"></i> Gestion de la relation client</li>
+                        </ul>
+                        <div class="tags">
+                            <span class="tag">Logistique</span>
+                            <span class="tag">Service Client</span>
+                            <span class="tag">Gestion des délais</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Expérience 3 -->
+                <div class="experience-item fade-in-left">
+                    <div class="experience-date">
+                        <span>Nov 2021 - Avril 2023</span>
+                        <div class="experience-duration">1 an 6 mois</div>
+                    </div>
+                    <div class="experience-content">
+                        <h3>Opérateur formulation pesée</h3>
+                        <h4>Octapharma Strasbourg</h4>
+                        <p>Opérateur en production pharmaceutique dans le cadre d'un contrat CDD.</p>
+                        <ul class="experience-details">
+                            <li><i class="fas fa-balance-scale"></i> Conduite des opérations de pesée, préparation et contrôle des matières premières</li>
+                            <li><i class="fas fa-clipboard-check"></i> Respect des bonnes pratiques de fabrication</li>
+                            <li><i class="fas fa-tools"></i> Maintenance et nettoyage des équipements</li>
+                            <li><i class="fas fa-chart-line"></i> Participation à l'amélioration continue</li>
+                        </ul>
+                        <div class="tags">
+                            <span class="tag">Production</span>
+                            <span class="tag">Qualité</span>
+                            <span class="tag">Pharmaceutique</span>
+                            <span class="tag">BPF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projets Section -->
+    <section id="projets" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Mes Projets</h2>
+                <p class="section-subtitle">Les projets sur lesquels j'ai travaillé</p>
+            </div>
+            
+            <!-- Projets en Entreprise -->
+            <h3 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--primary-color);">Projets en Entreprise</h3>
+            <div class="projects-grid">
+                <div class="project-card scale-in">
+                    <div class="project-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Nom du projet en entreprise</h3>
+                    <p>Description du projet réalisé en entreprise.</p>
+                    <div class="tags">
+                        <span class="tag">Active Directory</span>
+                        <span class="tag">Windows Server</span>
+                    </div>
+                </div>
+            </div> Entreprise -->
+            <h3 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--primary-color);">Projets en Entreprise</h3>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Nom du projet</h3>
+                    <p>Description du projet réalisé en entreprise.</p>
+                    <div class="tags">
+                        <span class="tag">Active Directory</span>
+                        <span class="tag">Windows Server</span>
+                    </div>
+                    <!-- IMPORTANT: Remplacez par le nom EXACT de votre fichier -->
+                    <a href="fichiers/projet-entreprise.pdf" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem;" download>
+                        <i class="fas fa-file-pdf"></i> Télécharger Documentation
+                    </a>
+                </div>
+            </div>
+
+            <!-- Projets Personnels -->
+            <h3 style="font-size: 1.8rem; margin: 3rem 0 1.5rem 0; color: var(--primary-color);">Projets Personnels</h3>
+            <div class="projects-grid">
+                <div class="project-card scale-in">
+                    <div class="project-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Projet GLPI</h3>
+                    <p>Mise en place et configuration d'un système de gestion de parc informatique et de support technique avec GLPI.</p>
+                    <div class="tags">
+                        <span class="tag">GLPI</span>
+                        <span class="tag">Gestion de parc</span>
+                        <span class="tag">Helpdesk</span>
+                    </div>
+                    <button onclick="telechargerFichier('projet1.pdf', 'Projet_GLPI.pdf')" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem; cursor: pointer;">
+                        <i class="fas fa-download"></i> Télécharger la documentation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="section" style="background: var(--bg-light);">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Mes Certifications</h2>
+                <p class="section-subtitle">Les certifications que j'ai obtenues</p>
+            </div>
+            
+            <div class="certifications-grid">
+                <!-- Certification 1 - IBM Cloud -->
+                <div class="certification-card scale-in delay-1">
+                    <div class="cert-icon">
+                        <i class="fab fa-ibm"></i>
+                    </div>
+                    <h3>IBM Cloud</h3>
+                    <p>Certification IBM Cloud - Fondamentaux du cloud computing et des services IBM Cloud.</p>
+                    <div class="tags">
+                        <span class="tag">Cloud Computing</span>
+                        <span class="tag">IBM</span>
+                    </div>
+                    <button onclick="telechargerFichier('certification1.pdf', 'Certification_IBM_Cloud.pdf')" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem; cursor: pointer;">
+                        <i class="fas fa-download"></i> Télécharger le certificat
+                    </button>
+                </div>
+
+                <!-- Certification 2 - RGPD Module 1 -->
+                <div class="certification-card scale-in delay-2">
+                    <div class="cert-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>RGPD Module 1</h3>
+                    <p>Formation RGPD Module 1 - Règlement Général sur la Protection des Données.</p>
+                    <div class="tags">
+                        <span class="tag">RGPD</span>
+                        <span class="tag">Protection des données</span>
+                    </div>
+                    <button onclick="telechargerFichier('certification2.pdf', 'Certification_RGPD_Module1.pdf')" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem; cursor: pointer;">
+                        <i class="fas fa-download"></i> Télécharger le certificat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compétences Section -->
+    <section id="competences" class="section competences">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Mes Compétences</h2>
+                <p class="section-subtitle">Les différentes expertises que j'ai développées</p>
+            </div>
+            
+            <div class="competences-container">
+                <!-- Compétences Informatiques -->
+                <div class="competence-category fade-in">
+                    <h3>Informatiques</h3>
+                    <div class="competence-grid">
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-network-wired"></i>
+                                <h4>Administration Système</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 70%">
+                                    <span class="progress-value">70%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-server"></i>
+                                <h4>Infrastructure Réseau</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 65%">
+                                    <span class="progress-value">65%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h4>Sécurité Informatique</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 60%">
+                                    <span class="progress-value">60%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Compétences Bureautiques -->
+                <div class="competence-category fade-in">
+                    <h3>Bureautiques</h3>
+                    <div class="competence-grid">
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-file-excel"></i>
+                                <h4>Microsoft Excel</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 85%">
+                                    <span class="progress-value">85%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-file-word"></i>
+                                <h4>Microsoft Word</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 90%">
+                                    <span class="progress-value">90%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Compétences Linguistiques -->
+                <div class="competence-category fade-in">
+                    <h3>Langues</h3>
+                    <div class="competence-grid">
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-language"></i>
+                                <h4>Français</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 100%">
+                                    <span class="progress-value">Langue maternelle</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-language"></i>
+                                <h4>Anglais</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 40%">
+                                    <span class="progress-value">Niveau A2</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="competence-item">
+                            <div class="competence-header">
+                                <i class="fas fa-language"></i>
+                                <h4>Allemand</h4>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 25%">
+                                    <span class="progress-value">Niveau A1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Veille Technologique Section -->
+    <section id="veille" class="section veille" style="background: var(--bg-light);">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Veille Technologique</h2>
+                <p class="section-subtitle">Les dernières actualités en cybersécurité et technologies</p>
+            </div>
+            
+            <div class="veille-grid">
+                <div class="veille-card fade-in delay-1">
+                    <span class="veille-category">Cybersécurité</span>
+                    <div class="veille-date">Décembre 2025</div>
+                    <h3 class="veille-title">Évolution des ransomwares : nouvelles techniques d'attaque</h3>
+                    <p>Les cybercriminels adoptent des méthodes de plus en plus sophistiquées pour contourner les défenses traditionnelles. Les attaques par ransomware ciblent désormais les sauvegardes et utilisent des techniques d'exfiltration de données avant chiffrement.</p>
+                    <div class="tags">
+                        <span class="tag">Ransomware</span>
+                        <span class="tag">Sécurité</span>
+                        <span class="tag">Menaces</span>
+                    </div>
+                    <a href="https://www.cybermalveillance.gouv.fr/" target="_blank" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire plus</a>
+                </div>
+
+                <div class="veille-card fade-in delay-2">
+                    <span class="veille-category">Intelligence Artificielle</span>
+                    <div class="veille-date">Décembre 2025</div>
+                    <h3 class="veille-title">L'IA générative dans la détection des menaces</h3>
+                    <p>Les solutions de sécurité intègrent de plus en plus l'intelligence artificielle pour détecter les anomalies et prévenir les attaques en temps réel. L'IA permet d'analyser des volumes massifs de données pour identifier des patterns d'attaque complexes.</p>
+                    <div class="tags">
+                        <span class="tag">IA</span>
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag">Détection</span>
+                    </div>
+                    <a href="https://www.lemondeinformatique.fr/" target="_blank" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire plus</a>
+                </div>
+
+                <div class="veille-card fade-in delay-3">
+                    <span class="veille-category">Infrastructure</span>
+                    <div class="veille-date">Décembre 2025</div>
+                    <h3 class="veille-title">Zero Trust Architecture : nouvelle norme de sécurité</h3>
+                    <p>Le modèle Zero Trust devient la norme pour sécuriser les infrastructures modernes. Cette approche repose sur le principe "ne jamais faire confiance, toujours vérifier" et s'applique à tous les utilisateurs, appareils et applications.</p>
+                    <div class="tags">
+                        <span class="tag">Zero Trust</span>
+                        <span class="tag">Architecture</span>
+                        <span class="tag">Sécurité</span>
+                    </div>
+                    <a href="https://www.cert.ssi.gouv.fr/" target="_blank" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire plus</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fiche de Synthèse Section -->
+    <section id="synthese" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Fiche de Synthèse</h2>
+                <p class="section-subtitle">Mes fiches de synthèse de projets et travaux</p>
+            </div>
+            
+            <div class="certifications-grid">
+                <div class="certification-card scale-in">
+                    <div class="cert-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Fiche de Synthèse</h3>
+                    <p>Synthèse complète de mes projets, compétences et réalisations durant ma formation BTS SIO SISR.</p>
+                    <div class="tags">
+                        <span class="tag">BTS SIO</span>
+                        <span class="tag">Synthèse</span>
+                    </div>
+                    <button onclick="telechargerFichier('fiche-synthese.pdf', 'Fiche_Synthese_Hakim_Ben_Mabrouk.pdf')" class="btn btn-primary" style="margin-top: 1rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1rem; cursor: pointer;">
+                        <i class="fas fa-download"></i> Télécharger la fiche de synthèse
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Me Contacter</h2>
+                <p class="section-subtitle">Pour toute opportunité ou question, n'hésitez pas à me contacter</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-info fade-in-left">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h5>Email</h5>
+                            <p>Disponible sur demande</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h5>Statut</h5>
+                            <p>En alternance au Ministère de la Justice</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h5>Formation</h5>
+                            <p>BTS SIO SISR - IMIE Paris</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="contactForm" class="contact-form fade-in-right">
+                    <div class="form-group">
+                        <label for="name">Votre Nom</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Votre Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Sujet</label>
+                        <input type="text" id="subject" name="subject" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <span>Envoyer Message</span>
+                        <i class="fas fa-paper-plane" style="margin-left: 0.5rem;"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="#hero" class="footer-logo">Hakim Ben Mabrouk</a>
+                    <p>Étudiant en BTS SIO SISR | En alternance au Ministère de la Justice</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-nav">
+                        <a href="#hero">Accueil</a>
+                        <a href="#formation">Formation</a>
+                        <a href="#experience">Expérience</a>
+                        <a href="#projets">Projets</a>
+                        <a href="#certifications">Certifications</a>
+                        <a href="#veille">Veille Techno</a>
+                        <a href="#synthese">Fiche Synthèse</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                    <p class="copyright">&copy; 2025 Hakim Ben Mabrouk. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Active nav link on scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Merci pour votre message ! Je vous répondrai dans les plus brefs délais.');
+            this.reset();
+        });
+
+        // Fonction pour télécharger les fichiers
+        function telechargerFichier(cheminFichier, nomFichier) {
+            const link = document.createElement('a');
+            link.href = cheminFichier;
+            link.download = nomFichier;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Gestion du mode sombre/clair
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const icon = themeToggleBtn.querySelector('i');
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Changer l'icône
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Charger le thème sauvegardé au chargement de la page
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        });
+
+        // Animation au défilement
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observer tous les éléments avec les classes d'animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .scale-in');
+            animatedElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
